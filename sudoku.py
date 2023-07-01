@@ -12,6 +12,13 @@ from pygame.rect import Rect
 from enum import Enum
 from pygame.sprite import RenderUpdates
 
+#####
+from boardaction import BoardAction
+from gamestate import GameState
+from problem import Problem
+#####
+
+
 #RGB Codes for colors used
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -110,7 +117,7 @@ class Controls:
             btn.draw(self.screen)
             btn_action = btn.update(pygame.mouse.get_pos(),mouse_up)
             if btn_action is not None:
-                board_action = btn_action  
+                board_action = btn_action
         
         if self.start != 0:
             timer = self.get_timer()
@@ -613,66 +620,6 @@ def read_sudoku_problem(filename):
         file.close()
     return state
 
-## Code copied from AIMA python repository to define a Problem class.
-# DO NOT MODIFY, but please read through the specification of each method 
-# in the class.
-
-# Note that the problem class is a parent class specifying 
-#  a problem data strucure. In the next cell you will be provided
-#  a class that inherits from the `Problem` class that you will need
-#  to implement.
-
-# Read this code carefully since it describes the functions you will need to 
-# implement in the subsequent cells.
-
-class Problem:
-    """The abstract class for a formal problem. You should subclass
-    this and implement the methods actions and result, and possibly
-    __init__, goal_test, and path_cost. Then you will create instances
-    of your subclass and solve them with the various search functions."""
-
-    def __init__(self, initial, goal=None):
-        """The constructor specifies the initial state, and possibly a goal
-        state, if there is a unique goal. Your subclass's constructor can add
-        other arguments."""
-        self.initial = initial
-        self.goal = goal
-
-    def actions(self, state):
-        """Return the actions that can be executed in the given
-        state. The result would typically be a list, but if there are
-        many actions, consider yielding them one at a time in an
-        iterator, rather than building them all at once."""
-        raise NotImplementedError
-
-    def result(self, state, action):
-        """Return the state that results from executing the given
-        action in the given state. The action must be one of
-        self.actions(state)."""
-        raise NotImplementedError
-
-    def goal_test(self, state):
-        """Return True if the state is a goal. The default method compares the
-        state to self.goal or checks for state in self.goal if it is a
-        list, as specified in the constructor. Override this method if
-        checking against a single self.goal is not enough."""
-        if isinstance(self.goal, list):
-            return state in self.goal
-        else:
-            return state == self.goal
-
-    def path_cost(self, c, state1, action, state2):
-        """Return the cost of a solution path that arrives at state2 from
-        state1 via action, assuming cost c to get up to state1. If the problem
-        is such that the path doesn't matter, this function will only look at
-        state2. If the path does matter, it will consider c and maybe state1
-        and action. The default method costs 1 for every step in the path."""
-        return c + 1
-
-    def value(self, state):
-        """For optimization problems, each state has a value. Hill Climbing
-        and related algorithms try to maximize this value."""
-        raise NotImplementedError
 
 # Search tree node class.
 class Node:
@@ -2231,21 +2178,6 @@ class UIElement(Sprite):
     def draw(self, surface):
         surface.blit(self.image, self.rect)
 
-#class for which screen to be on
-class GameState(Enum):
-    QUIT = -1
-    TITLE = 0
-    GAME_BOARD = 1
-    SOLVER = 2
-
-#class for which board action to perform
-class BoardAction(Enum):
-    NOTHING = 0
-    SOLVE = 1
-    RESET = 2
-    NEWGAME = 3
-    HOME = 4
-    GENERATE = 5
 
 #displays the title screen of the program
 def title_screen(screen):
